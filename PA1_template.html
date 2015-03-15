@@ -70,7 +70,6 @@ img {
 </blockquote>
 <pre class="r"><code>originalData &lt;- read.csv(&quot;activity.csv&quot;)</code></pre>
 <p>A portion of the original dataset is as follows:</p>
-<pre class="r"><code>print(originalData[1:20,])</code></pre>
 <pre><code>##    steps       date interval
 ## 1     NA 2012-10-01        0
 ## 2     NA 2012-10-01        5
@@ -103,7 +102,6 @@ img {
 <li>A dataset containing the total number of steps taken each day is created.</li>
 </ol>
 <p><code>r   dailyStepSum &lt;- aggregate(originalData$steps, list(originalData$date), sum)</code> A portion of the new dataset is as follows:</p>
-<p><code>r   colnames(dailyStepSum) &lt;- c(&quot;Date&quot;, &quot;Steps&quot;)   print(dailyStepSum[1:20,])</code></p>
 <p><code>##          Date Steps   ## 1  2012-10-01    NA   ## 2  2012-10-02   126   ## 3  2012-10-03 11352   ## 4  2012-10-04 12116   ## 5  2012-10-05 13294   ## 6  2012-10-06 15420   ## 7  2012-10-07 11015   ## 8  2012-10-08    NA   ## 9  2012-10-09 12811   ## 10 2012-10-10  9900   ## 11 2012-10-11 10304   ## 12 2012-10-12 17382   ## 13 2012-10-13 12426   ## 14 2012-10-14 15098   ## 15 2012-10-15 10139   ## 16 2012-10-16 15084   ## 17 2012-10-17 13452   ## 18 2012-10-18 10056   ## 19 2012-10-19 11829   ## 20 2012-10-20 10395</code></p>
 <ol start="2" style="list-style-type: decimal">
 <li>A histogram of the above data is created as a form of visual representation.</li>
@@ -114,11 +112,9 @@ img {
 <li><p>Calculate the mean and median values (ignoring NA values) using the above dataset.</p></li>
 <li><p>Mean</p>
 <p><code>r   dailyStepMean &lt;- mean(dailyStepSum$Steps, na.rm=TRUE)</code></p>
-<p><code>r   print(dailyStepMean)</code></p>
 <code>## [1] 10766.19</code></li>
 <li><p>Median</p>
 <p><code>r   dailyStepMedian &lt;- median(dailyStepSum$Steps, na.rm=TRUE)</code></p>
-<p><code>r   print(dailyStepMedian)</code></p>
 <p><code>## [1] 10765</code></p></li>
 </ol>
 </div>
@@ -132,7 +128,6 @@ img {
 <li>Generate the mean (average) number of steps taken (ignoring NA values) for each 5-minute interval, itself averaged across all days.</li>
 </ol>
 <p><code>r   intervalSteps &lt;- aggregate(       data=originalData,       steps~interval,       FUN=mean,       na.action=na.omit   )   colnames(intervalSteps) &lt;- c(&quot;Interval&quot;, &quot;AvgStepsAvgAcrossDay&quot;)</code> A portion of the new dataset is as follows:</p>
-<p><code>r   print(intervalSteps[1:20,])</code></p>
 <p><code>##    Interval AvgStepsAvgAcrossDay   ## 1         0            1.7169811   ## 2         5            0.3396226   ## 3        10            0.1320755   ## 4        15            0.1509434   ## 5        20            0.0754717   ## 6        25            2.0943396   ## 7        30            0.5283019   ## 8        35            0.8679245   ## 9        40            0.0000000   ## 10       45            1.4716981   ## 11       50            0.3018868   ## 12       55            0.1320755   ## 13      100            0.3207547   ## 14      105            0.6792453   ## 15      110            0.1509434   ## 16      115            0.3396226   ## 17      120            0.0000000   ## 18      125            1.1132075   ## 19      130            1.8301887   ## 20      135            0.1698113</code></p>
 <ol start="2" style="list-style-type: decimal">
 <li>A Time-Series plot is created from the above dataset</li>
@@ -145,7 +140,6 @@ img {
 <li>Finding the 5-minute interval with the maximum number of steps</li>
 </ol>
 <p><code>r   intervalMax &lt;- intervalSteps[intervalSteps$AvgStepsAvgAcrossDay==max(intervalSteps$AvgStepsAvgAcrossDay),]</code></p>
-<p><code>r   print(intervalMax)</code></p>
 <p><code>##     Interval AvgStepsAvgAcrossDay   ## 104      835             206.1698</code> Therefore, the interval between <strong>835</strong> and <strong>840</strong> minutes has the maximum number of steps.</p>
 </div>
 <div id="imputing-missing-values" class="section level2">
@@ -159,7 +153,6 @@ img {
 <li>Total number of rows with NA values in original data.</li>
 </ol>
 <p><code>r   countNA &lt;- nrow(subset(originalData, is.na(originalData$steps)))</code></p>
-<p><code>r   print(countNA)</code></p>
 <p><code>## [1] 2304</code></p>
 <ol start="2" style="list-style-type: decimal">
 <li>The average 5-minute interval values from the prevous section is used to replace the NA values of the original data and a new dataset will be generated from the latter.</li>
@@ -167,13 +160,11 @@ img {
 <p>Decimal values will be rounded up to a whole number.</p>
 <p><code>r   stepValues &lt;- data.frame(originalData$steps)   stepValues[is.na(stepValues),] &lt;- ceiling(tapply(X=originalData$steps,INDEX=originalData$interval,FUN=mean,na.rm=TRUE))   newData &lt;- cbind(stepValues, originalData[,2:3])   colnames(newData) &lt;- c(&quot;Steps&quot;, &quot;Date&quot;, &quot;Interval&quot;)</code></p>
 <p>A portion of the new dataset is as follows:</p>
-<p><code>r   print(newData[1:20,])</code></p>
 <p><code>##    Steps       Date Interval   ## 1      2 2012-10-01        0   ## 2      1 2012-10-01        5   ## 3      1 2012-10-01       10   ## 4      1 2012-10-01       15   ## 5      1 2012-10-01       20   ## 6      3 2012-10-01       25   ## 7      1 2012-10-01       30   ## 8      1 2012-10-01       35   ## 9      0 2012-10-01       40   ## 10     2 2012-10-01       45   ## 11     1 2012-10-01       50   ## 12     1 2012-10-01       55   ## 13     1 2012-10-01      100   ## 14     1 2012-10-01      105   ## 15     1 2012-10-01      110   ## 16     1 2012-10-01      115   ## 17     0 2012-10-01      120   ## 18     2 2012-10-01      125   ## 19     2 2012-10-01      130   ## 20     1 2012-10-01      135</code></p>
 <ol start="3" style="list-style-type: decimal">
 <li>The total number of steps taken each day is generated using this new dataset.</li>
 </ol>
 <p><code>r   newDailyStepSum &lt;- aggregate(newData$Steps, list(newData$Date), sum)</code> A portion of the new dataset is as follows:</p>
-<p><code>r   colnames(newDailyStepSum) &lt;- c(&quot;Date&quot;, &quot;Steps&quot;)   print(newDailyStepSum[1:20,])</code></p>
 <p><code>##          Date Steps   ## 1  2012-10-01 10909   ## 2  2012-10-02   126   ## 3  2012-10-03 11352   ## 4  2012-10-04 12116   ## 5  2012-10-05 13294   ## 6  2012-10-06 15420   ## 7  2012-10-07 11015   ## 8  2012-10-08 10909   ## 9  2012-10-09 12811   ## 10 2012-10-10  9900   ## 11 2012-10-11 10304   ## 12 2012-10-12 17382   ## 13 2012-10-13 12426   ## 14 2012-10-14 15098   ## 15 2012-10-15 10139   ## 16 2012-10-16 15084   ## 17 2012-10-17 13452   ## 18 2012-10-18 10056   ## 19 2012-10-19 11829   ## 20 2012-10-20 10395</code></p>
 <ol start="4" style="list-style-type: decimal">
 <li>A histogram of the above data is created as a form of visual representation.</li>
@@ -184,11 +175,9 @@ img {
 <li><p>Calculate the mean and median values of this new dataset (NA values replaced with mean).</p></li>
 <li><p>Mean</p>
 <p><code>r   newDailyStepMean &lt;- mean(newDailyStepSum$Steps)</code></p>
-<p><code>r   print(newDailyStepMean)</code></p>
 <code>## [1] 10784.92</code></li>
 <li><p>Median</p>
 <p><code>r   newDailyStepMedian &lt;- median(newDailyStepSum$Steps)</code></p>
-<p><code>r   print(newDailyStepMedian)</code></p>
 <p><code>## [1] 10909</code></p></li>
 <li><p>It seems that adding the missing values to the original data has caused both the mean and median values to increase.</p></li>
 <li><p>Mean:</p>
@@ -209,10 +198,8 @@ img {
 <p>newDataWithDayType &lt;- cbind(newData, dateDayType)</p>
 <p>colnames(newDataWithDayType) &lt;- c(“Steps”, “Date”, “Interval”, “DayType”) ```</p>
 <p>A portion of this dataset is as follows:</p>
-<p><code>r   print(newDataWithDayType[1:20,])</code></p>
 <p><code>##    Steps       Date Interval DayType   ## 1      2 2012-10-01        0 weekday   ## 2      1 2012-10-01        5 weekday   ## 3      1 2012-10-01       10 weekday   ## 4      1 2012-10-01       15 weekday   ## 5      1 2012-10-01       20 weekday   ## 6      3 2012-10-01       25 weekday   ## 7      1 2012-10-01       30 weekday   ## 8      1 2012-10-01       35 weekday   ## 9      0 2012-10-01       40 weekday   ## 10     2 2012-10-01       45 weekday   ## 11     1 2012-10-01       50 weekday   ## 12     1 2012-10-01       55 weekday   ## 13     1 2012-10-01      100 weekday   ## 14     1 2012-10-01      105 weekday   ## 15     1 2012-10-01      110 weekday   ## 16     1 2012-10-01      115 weekday   ## 17     0 2012-10-01      120 weekday   ## 18     2 2012-10-01      125 weekday   ## 19     2 2012-10-01      130 weekday   ## 20     1 2012-10-01      135 weekday</code> 2. The data is then separated into weekday or weekend and the mean (average) number of steps taken for each 5-minute interval, itself averaged across all weekday days or weekend days is calculated.</p>
 <p><code>r   dayTypeIntervalSteps &lt;- aggregate(       data=newDataWithDayType,       Steps ~ DayType + Interval,       FUN=mean   )</code> A portion of the dataset is as follows:</p>
-<p><code>r   print(dayTypeIntervalSteps[1:20,])</code></p>
 <p><code>##    DayType Interval     Steps   ## 1  weekday        0 2.2888889   ## 2  weekend        0 0.2500000   ## 3  weekday        5 0.5333333   ## 4  weekend        5 0.1250000   ## 5  weekday       10 0.2888889   ## 6  weekend       10 0.1250000   ## 7  weekday       15 0.3111111   ## 8  weekend       15 0.1250000   ## 9  weekday       20 0.2222222   ## 10 weekend       20 0.1250000   ## 11 weekday       25 1.7111111   ## 12 weekend       25 3.6250000   ## 13 weekday       30 0.7555556   ## 14 weekend       30 0.1250000   ## 15 weekday       35 1.1555556   ## 16 weekend       35 0.1250000   ## 17 weekday       40 0.0000000   ## 18 weekend       40 0.0000000   ## 19 weekday       45 1.8666667   ## 20 weekend       45 0.6250000</code></p>
 <ol start="3" style="list-style-type: decimal">
 <li>Finally, a panel plot of both weekend and weekday graphs is generated.</li>
